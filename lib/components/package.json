@@ -44,7 +44,9 @@
     "@storybook/csf": "0.0.2--canary.7c6c115.0",
     "@storybook/theming": "6.5.0-alpha.64",
     "core-js": "^3.8.2",
-    "regenerator-runtime": "^0.13.7"
+    "qs": "^6.10.0",
+    "regenerator-runtime": "^0.13.7",
+    "util-deprecate": "^1.0.2"
   },
   "devDependencies": {
     "@popperjs/core": "^2.6.0",
@@ -63,14 +65,12 @@
     "polished": "^4.2.2",
     "prettier": ">=2.2.1 <=2.3.0",
     "prop-types": "^15.7.2",
-    "qs": "^6.10.0",
     "react-colorful": "^5.1.2",
     "react-popper-tooltip": "^3.1.1",
     "react-syntax-highlighter": "^15.4.5",
     "react-textarea-autosize": "^8.3.0",
     "ts-dedent": "^2.0.0",
-    "ts-node": "^10.4.0",
-    "util-deprecate": "^1.0.2"
+    "ts-node": "^10.4.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",

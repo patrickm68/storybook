@@ -21,11 +21,19 @@ interface Options {
   watch?: boolean;
 }
 
+const makeExternalPredicate = (externals: string[]) => {
+  if (externals.length === 0) {
+    return () => false;
+  }
+  const pattern = new RegExp(`^(${externals.join('|')})($|/)`);
+  return (id: string) => pattern.test(id);
+};
+
 async function build(options: Options) {
   const { input, externals, cwd, optimized } = options;
   const setting: RollupOptions = {
     input,
-    external: externals,
+    external: makeExternalPredicate(externals),
     plugins: [
       nodeResolve({
         preferBuiltins: true,
