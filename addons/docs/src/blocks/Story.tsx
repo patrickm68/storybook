@@ -133,6 +133,8 @@ const Story: FunctionComponent<StoryProps> = (props) => {
   const story = useStory(storyId, context);
   const [showLoader, setShowLoader] = useState(true);
 
+  console.log(storyId, story);
+
   useEffect(() => {
     let cleanup: () => void;
     if (story && storyRef.current) {
