@@ -4,13 +4,7 @@ import { logger } from '@storybook/client-logger';
 
 import { normalizeStory } from './normalizeStory';
 import { normalizeComponentAnnotations } from './normalizeComponentAnnotations';
-import type {
-  ModuleExports,
-  CSFFile,
-  NormalizedComponentAnnotations,
-  Path,
-  NormalizedStoryAnnotations,
-} from '../types';
+import type { ModuleExports, CSFFile, NormalizedComponentAnnotations, Path } from '../types';
 
 const checkGlobals = (parameters: Parameters) => {
   const { globals, globalTypes } = parameters;
@@ -42,8 +36,7 @@ const checkDisallowedParameters = (parameters: Parameters) => {
 export function processCSFFile<TFramework extends AnyFramework>(
   moduleExports: ModuleExports,
   importPath: Path,
-  title: ComponentTitle,
-  moduleExportMap?: Map<any, StoryId>
+  title: ComponentTitle
 ): CSFFile<TFramework> {
   const { default: defaultExport, __namedExportsOrder, ...namedExports } = moduleExports;
 
@@ -58,8 +51,6 @@ export function processCSFFile<TFramework extends AnyFramework>(
       const storyMeta = normalizeStory(key, namedExports[key], meta);
       checkDisallowedParameters(storyMeta.parameters);
 
-      // Track which exports get turned into which ids
-      if (moduleExportMap) moduleExportMap.set(namedExports[key], storyMeta.id);
       csfFile.stories[storyMeta.id] = storyMeta;
     }
   });
