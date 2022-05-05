@@ -73,7 +73,7 @@ export const getStoryProps = <TFramework extends AnyFramework>(
   context: DocsContextProps<TFramework>,
   onStoryFnCalled: () => void
 ): PureStoryProps => {
-  const { name: storyName, parameters } = story;
+  const { name: storyName, parameters = {} } = story || {};
   const { docs = {} } = parameters;
 
   if (docs.disable) {
@@ -107,7 +107,7 @@ export const getStoryProps = <TFramework extends AnyFramework>(
 
   return {
     inline: storyIsInline,
-    id: story.id,
+    id: story?.id,
     height: height || (storyIsInline ? undefined : iframeHeight),
     title: storyName,
     ...(storyIsInline && {
@@ -133,12 +133,23 @@ const Story: FunctionComponent<StoryProps> = (props) => {
   const story = useStory(storyId, context);
   const [showLoader, setShowLoader] = useState(true);
 
+  const { of } = props as StoryRefProps;
+  const externalRender = of && context.type === 'external';
+
+  // Register the story with the context so it can be booted into the preview
+  if (externalRender) context.addStory(of, false);
+
   useEffect(() => {
     let cleanup: () => void;
-    if (story && storyRef.current) {
+    if (storyRef.current) {
       const element = storyRef.current as HTMLElement;
-      cleanup = context.renderStoryToElement(story, element);
-      setShowLoader(false);
+      if (externalRender) {
+        context.renderStory(of, element);
+        setShowLoader(false);
+      } else if (story) {
+        cleanup = context.renderStoryToElement(story, element);
+        setShowLoader(false);
+      }
     }
     return () => cleanup && cleanup();
   }, [story]);
@@ -147,7 +158,7 @@ const Story: FunctionComponent<StoryProps> = (props) => {
   const [rendered, onRendered] = makeGate();
   useEffect(onRendered);
 
-  if (!story) {
+  if (!story && !externalRender) {
     return <StorySkeleton />;
   }
 
@@ -155,12 +166,11 @@ const Story: FunctionComponent<StoryProps> = (props) => {
   if (!storyProps) {
     return null;
   }
-
-  if (storyProps.inline) {
+  if (storyProps.inline || externalRender) {
     // If we are rendering a old-style inline Story via `PureStory` below, we want to emit
     // the `STORY_RENDERED` event when it renders. The modern mode below calls out to
     // `Preview.renderStoryToDom()` which itself emits the event.
-    if (!global?.FEATURES?.modernInlineRender) {
+    if (!global?.FEATURES?.modernInlineRender && !externalRender) {
       // We need to wait for two things before we can consider the story rendered:
       //  (a) React's `useEffect` hook needs to fire. This is needed for React stories, as
       //      decorators of the form `<A><B/></A>` will not actually execute `B` in the first
@@ -178,15 +188,15 @@ const Story: FunctionComponent<StoryProps> = (props) => {
       // FIXME: height/style/etc. lifted from PureStory
       const { height } = storyProps;
       return (
-        <div id={storyBlockIdFromId(story.id)}>
+        <div id={storyBlockIdFromId(story?.id)}>
           <MDXProvider components={resetComponents}>
             {height ? (
-              <style>{`#story--${story.id} { min-height: ${height}; transform: translateZ(0); overflow: auto }`}</style>
+              <style>{`#story--${story?.id} { min-height: ${height}; transform: translateZ(0); overflow: auto }`}</style>
             ) : null}
             {showLoader && <StorySkeleton />}
             <div
               ref={storyRef}
-              data-name={story.name}
+              data-name={story?.name}
               dangerouslySetInnerHTML={{ __html: htmlContents }}
             />
           </MDXProvider>
@@ -196,7 +206,7 @@ const Story: FunctionComponent<StoryProps> = (props) => {
   }
 
   return (
-    <div id={storyBlockIdFromId(story.id)}>
+    <div id={storyBlockIdFromId(story?.id)}>
       <MDXProvider components={resetComponents}>
         <PureStory {...storyProps} />
       </MDXProvider>

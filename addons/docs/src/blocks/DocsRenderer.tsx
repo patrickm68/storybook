@@ -41,7 +41,7 @@ async function renderDocsAsync<TFramework extends AnyFramework>(
   const Container: ComponentType<{ context: DocsContextProps<TFramework> }> =
     docsParameters.container ||
     (await docsParameters.getContainer?.()) ||
-    (docsContext.legacy ? DocsContainer : SimpleContainer);
+    (docsContext.type === 'legacy' ? DocsContainer : SimpleContainer);
 
   const Page: ComponentType = docsParameters.page || (await docsParameters.getPage?.()) || DocsPage;
 
