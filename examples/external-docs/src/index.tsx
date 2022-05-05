@@ -2,23 +2,36 @@
 
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import StoriesPage from './StoriesPage';
-import SecondStoriesPage from './SecondStoriesPage';
+import { ExternalDocsContainer } from '@storybook/addon-docs';
 
-const Router = ({ routes }: { routes: (() => JSX.Element)[] }) => {
-  const [routeNumber, setRoute] = useState(0);
-  const Route = routes[routeNumber];
+/* eslint-disable import/no-webpack-loader-syntax */
+import AccountFormDocs from '!babel-loader!@mdx-js/loader!./components/AccountForm.docs.mdx';
+/* eslint-disable import/no-webpack-loader-syntax */
+// import AccountFormDocs from '!babel-loader!@mdx-js/loader!./components/AccountForm.docs.mdx';
 
-  console.log(routeNumber);
+import * as reactAnnotations from '@storybook/react/dist/esm/client/preview/config';
+import * as previewAnnotations from './.storybook/preview';
+
+const projectAnnotations = {
+  ...reactAnnotations,
+  ...previewAnnotations,
+};
+
+const Router = ({ docsPages }: { docsPages: any[] }) => {
+  const [docNumber, setDocNumber] = useState(0);
+  const DocsPage = docsPages[docNumber];
+
   return (
     <div>
-      <Route />
+      <ExternalDocsContainer projectAnnotations={projectAnnotations}>
+        <DocsPage />
+      </ExternalDocsContainer>
       {/* eslint-disable-next-line react/button-has-type */}
-      <button onClick={() => setRoute((routeNumber + 1) % routes.length)}>Next Route</button>
+      <button onClick={() => setDocNumber((docNumber + 1) % docsPages.length)}>Next Route</button>
     </div>
   );
 };
 
-const App = () => <Router routes={[StoriesPage, SecondStoriesPage]} />;
+const App = () => <Router docsPages={[AccountFormDocs]} />;
 
 ReactDOM.render(<App />, document.getElementById('root'));

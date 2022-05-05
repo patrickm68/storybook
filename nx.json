@@ -142,6 +142,9 @@
     "@storybook/external-docs": {
       "implicitDependencies": []
     },
+    "@storybook/nextra-demo": {
+      "implicitDependencies": []
+    },
 
     "server-kitchen-sink": {
       "implicitDependencies": []

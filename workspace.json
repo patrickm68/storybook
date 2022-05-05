@@ -165,6 +165,10 @@
       "root": "examples/external-docs",
       "type": "library"
     },
+    "@storybook/nextra-demo": {
+      "root": "examples/nextra-demo",
+      "type": "library"
+    },
     "server-kitchen-sink": {
       "root": "examples/server-kitchen-sink",
       "type": "library"

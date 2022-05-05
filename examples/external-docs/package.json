@@ -9,8 +9,10 @@
     "storybook": "cross-env STORYBOOK_DISPLAY_WARNING=true DISPLAY_WARNING=true sb dev -p 9011 --no-manager-cache -c ./src/.storybook"
   },
   "dependencies": {
-    "@storybook/addon-essentials": "6.5.0-beta.4",
-    "@storybook/components": "6.5.0-beta.4",
+    "@mdx-js/loader": "^1.0.0",
+    "@storybook/addon-docs": "6.5.0-beta.1",
+    "@storybook/addon-essentials": "6.5.0-beta.1",
+    "@storybook/components": "6.5.0-beta.1",
     "@storybook/csf": "0.0.2--canary.87bc651.0",
     "@storybook/preview-web": "6.5.0-beta.4",
     "@storybook/react": "6.5.0-beta.4",
