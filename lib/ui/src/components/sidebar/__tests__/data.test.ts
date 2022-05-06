@@ -105,11 +105,11 @@ describe('collapse all stories', () => {
     const hasDocsOnly: StoriesHash = {
       ...stories,
       a1: {
+        type: 'docs',
         id: 'a1',
         name: 'a1',
         title: 'a',
         depth: 2,
-        type: 'docs',
         parent: 'a',
         importPath: './a.js',
       },
